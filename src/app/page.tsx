@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getCurrentPosition,
   isDeviceOrientationSupported,
@@ -50,6 +50,8 @@ export default function HomePage(): JSX.Element {
   const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [locationErrorMessage, setLocationErrorMessage] = useState<string | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [sensorToastVisible, setSensorToastVisible] = useState(false);
+  const sensorToastShownRef = useRef(false);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -159,13 +161,6 @@ export default function HomePage(): JSX.Element {
     void useCurrentLocation();
   }, [useCurrentLocation]);
 
-  const subtitle = useMemo(() => {
-    if (isMobile) {
-      return '모바일: 센서 추적 + 드래그 언락 / 데스크톱: 드래그 탐색';
-    }
-    return '데스크톱 드래그로 별자리 지도를 탐색하세요.';
-  }, [isMobile]);
-
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
@@ -179,6 +174,31 @@ export default function HomePage(): JSX.Element {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isMobile) {
+      return;
+    }
+
+    if (sensorToastShownRef.current) {
+      return;
+    }
+
+    if (sensorState.permission === 'granted' && sensorState.isAvailable) {
+      sensorToastShownRef.current = true;
+      setSensorToastVisible(true);
+
+      const timeoutId = window.setTimeout(() => {
+        setSensorToastVisible(false);
+      }, 2200);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+      };
+    }
+
+    return;
+  }, [isMobile, sensorState.isAvailable, sensorState.permission]);
+
   return (
     <main className="viewer-shell">
       <DynamicSkyCanvas />
@@ -187,7 +207,6 @@ export default function HomePage(): JSX.Element {
         <header className="hero">
           <p className="hero-kicker">Realtime Night Sky</p>
           <h1>Stella</h1>
-          <p>{subtitle}</p>
         </header>
       </div>
 
@@ -199,6 +218,12 @@ export default function HomePage(): JSX.Element {
           onRequestPermission={requestSensorPermission}
         />
       </div>
+
+      {sensorToastVisible && (
+        <div className="sensor-toast" role="status" aria-live="polite">
+          센서가 활성화되었습니다.
+        </div>
+      )}
 
       <button
         type="button"

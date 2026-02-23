@@ -39,6 +39,10 @@ export function PermissionGate({
     return null;
   }
 
+  if (permission === 'granted' && sensorAvailable) {
+    return null;
+  }
+
   const message = permissionText(permission, sensorAvailable);
   const needsAction = permission === 'unknown' || permission === 'denied';
 
