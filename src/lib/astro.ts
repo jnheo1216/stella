@@ -153,6 +153,7 @@ export function projectLabels(
       return {
         code: label.code,
         name: label.name,
+        nameKo: label.nameKo,
         rank: label.rank,
         ...point
       };

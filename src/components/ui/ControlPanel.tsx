@@ -38,6 +38,7 @@ export function ControlPanel({
   const cameraMode = useSkyStore((state) => state.cameraMode);
   const isMobile = useSkyStore((state) => state.isMobile);
   const fovDeg = useSkyStore((state) => state.fovDeg);
+  const labelDisplayMode = useSkyStore((state) => state.labelDisplayMode);
 
   const setObserver = useSkyStore((state) => state.setObserver);
   const setTimeMode = useSkyStore((state) => state.setTimeMode);
@@ -46,6 +47,7 @@ export function ControlPanel({
   const resetManualLook = useSkyStore((state) => state.resetManualLook);
   const setCameraMode = useSkyStore((state) => state.setCameraMode);
   const adjustFov = useSkyStore((state) => state.adjustFov);
+  const setLabelDisplayMode = useSkyStore((state) => state.setLabelDisplayMode);
 
   const now = Date.now();
   const manualOffsetMinutes = clamp(
@@ -211,6 +213,24 @@ export function ControlPanel({
             }
           }}
         />
+      </div>
+
+      <div className="control-group">
+        <label htmlFor="label-mode-select">별자리 라벨 언어</label>
+        <select
+          id="label-mode-select"
+          value={labelDisplayMode}
+          onChange={(event) => {
+            const nextMode = event.target.value;
+            if (nextMode === 'en' || nextMode === 'ko' || nextMode === 'both') {
+              setLabelDisplayMode(nextMode);
+            }
+          }}
+        >
+          <option value="ko">한국어</option>
+          <option value="en">영어</option>
+          <option value="both">한국어 + 영어</option>
+        </select>
       </div>
     </aside>
   );

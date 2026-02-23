@@ -18,6 +18,7 @@ import type {
   ConstellationLabel,
   ConstellationSegment,
   HorizontalPoint,
+  LabelDisplayMode,
   ProjectedLabel,
   ProjectedSegment,
   ProjectedStar,
@@ -50,10 +51,10 @@ type SkySceneProps = {
   segments: ProjectedSegment[];
   labels: ProjectedLabel[];
   cameraMode: 'sensor' | 'manual';
+  labelDisplayMode: LabelDisplayMode;
   manualYawDeg: number;
   manualPitchDeg: number;
   sensorQuaternion: [number, number, number, number] | null;
-  maxLabels: number;
 };
 
 function SkyScene({
@@ -61,10 +62,10 @@ function SkyScene({
   segments,
   labels,
   cameraMode,
+  labelDisplayMode,
   manualYawDeg,
   manualPitchDeg,
-  sensorQuaternion,
-  maxLabels
+  sensorQuaternion
 }: SkySceneProps): JSX.Element {
   const groupRef = useRef<Group>(null);
   const targetQuaternionRef = useRef(new Quaternion());
@@ -102,7 +103,7 @@ function SkyScene({
     <group ref={groupRef}>
       <StarsLayer stars={stars} />
       <ConstellationLayer segments={segments} />
-      <LabelsLayer labels={labels} maxLabels={maxLabels} />
+      <LabelsLayer labels={labels} displayMode={labelDisplayMode} />
     </group>
   );
 }
@@ -112,6 +113,7 @@ export function SkyCanvas(): JSX.Element {
   const timeState = useSkyStore((state) => state.timeState);
   const cameraMode = useSkyStore((state) => state.cameraMode);
   const sensorQuaternion = useSkyStore((state) => state.sensorState.quaternion);
+  const labelDisplayMode = useSkyStore((state) => state.labelDisplayMode);
   const manualYawDeg = useSkyStore((state) => state.manualYawDeg);
   const manualPitchDeg = useSkyStore((state) => state.manualPitchDeg);
   const fovDeg = useSkyStore((state) => state.fovDeg);
@@ -211,11 +213,6 @@ export function SkyCanvas(): JSX.Element {
     return projectLabels(data.labels, observer, timeState.epochMs);
   }, [data, observer, timeState.epochMs]);
 
-  const maxLabels = useMemo(() => {
-    const budget = Math.round((108 - fovDeg) * 1.25);
-    return Math.max(8, Math.min(88, budget));
-  }, [fovDeg]);
-
   const onPointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
       if (isMobile && cameraMode === 'sensor') {
@@ -298,10 +295,10 @@ export function SkyCanvas(): JSX.Element {
           segments={projectedSegments}
           labels={projectedLabels}
           cameraMode={cameraMode}
+          labelDisplayMode={labelDisplayMode}
           manualYawDeg={manualYawDeg}
           manualPitchDeg={manualPitchDeg}
           sensorQuaternion={sensorQuaternion}
-          maxLabels={maxLabels}
         />
       </Canvas>
 

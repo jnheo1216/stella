@@ -94,13 +94,12 @@ body::before {
 
 .constellation-label {
   display: inline-block;
-  font-size: 0.74rem;
+  font-size: clamp(3.92rem, 7.2vw, 5.36rem);
   font-family: var(--font-mono), monospace;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: #dff1ff;
-  text-shadow: 0 0 16px rgba(128, 207, 255, 0.5);
-  opacity: 0.9;
+  color: #afc2dd;
+  text-shadow: 0 0 10px rgba(145, 188, 255, 0.22);
   white-space: nowrap;
 }
 
@@ -310,6 +309,15 @@ input[type='datetime-local'] {
   border-radius: 9px;
   border: 1px solid rgba(164, 200, 255, 0.25);
   background: rgba(5, 10, 20, 0.7);
+  color: var(--text-main);
+}
+
+select {
+  width: 100%;
+  padding: 8px 9px;
+  border-radius: 9px;
+  border: 1px solid rgba(164, 200, 255, 0.25);
+  background: rgba(5, 10, 20, 0.82);
   color: var(--text-main);
 }
 

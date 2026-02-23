@@ -19,6 +19,7 @@ type SegmentRecord = {
 type LabelRecord = {
   code: string;
   name: string;
+  nameKo?: string;
   raDeg: number;
   decDeg: number;
   rank: number;
@@ -103,6 +104,7 @@ async function main(): Promise<void> {
       {
         name?: string;
         en?: string;
+        ko?: string;
         desig?: string;
         rank?: string | number;
       }
@@ -200,6 +202,7 @@ async function main(): Promise<void> {
     string,
     {
       name: string;
+      nameKo?: string;
       rank: number;
       ra: number[];
       dec: number[];
@@ -212,6 +215,7 @@ async function main(): Promise<void> {
       makeCleanName(feature.properties.en) ??
       makeCleanName(feature.properties.name) ??
       code;
+    const nameKo = makeCleanName(feature.properties.ko);
 
     const rawRank = Number(feature.properties.rank ?? 3);
     const rank = Number.isFinite(rawRank) ? rawRank : 3;
@@ -228,6 +232,7 @@ async function main(): Promise<void> {
     if (!existing) {
       labelsByCode.set(code, {
         name,
+        ...(nameKo ? { nameKo } : {}),
         rank,
         ra: [raDeg],
         dec: [decDeg]
@@ -244,6 +249,7 @@ async function main(): Promise<void> {
     .map(([code, value]) => ({
       code,
       name: value.name,
+      ...(value.nameKo ? { nameKo: value.nameKo } : {}),
       rank: value.rank,
       raDeg: averageWrappedAnglesDeg(value.ra),
       decDeg: value.dec.reduce((acc, dec) => acc + dec, 0) / value.dec.length

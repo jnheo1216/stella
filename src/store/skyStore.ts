@@ -2,12 +2,20 @@
 
 import { create } from 'zustand';
 import { clamp, wrapDeg180 } from '@/lib/coords';
-import type { CameraMode, Observer, SensorPermission, SensorState, TimeState } from '@/types/sky';
+import type {
+  CameraMode,
+  LabelDisplayMode,
+  Observer,
+  SensorPermission,
+  SensorState,
+  TimeState
+} from '@/types/sky';
 
 type SkyState = {
   observer: Observer;
   timeState: TimeState;
   cameraMode: CameraMode;
+  labelDisplayMode: LabelDisplayMode;
   sensorState: SensorState;
   isMobile: boolean;
   manualYawDeg: number;
@@ -27,6 +35,7 @@ type SkyActions = {
   dragLook: (deltaX: number, deltaY: number) => void;
   resetManualLook: () => void;
   adjustFov: (deltaDeg: number) => void;
+  setLabelDisplayMode: (mode: LabelDisplayMode) => void;
   setSensorPermission: (permission: SensorPermission) => void;
   setSensorAvailability: (isAvailable: boolean) => void;
   setSensorQuaternion: (quaternion: [number, number, number, number]) => void;
@@ -55,6 +64,7 @@ function buildInitialState(): SkyState {
       epochMs: Date.now()
     },
     cameraMode: 'manual',
+    labelDisplayMode: 'ko',
     sensorState: {
       permission: 'unknown',
       isAvailable: false,
@@ -175,6 +185,12 @@ export const useSkyStore = create<SkyStore>((set) => ({
     }));
   },
 
+  setLabelDisplayMode: (mode) => {
+    set({
+      labelDisplayMode: mode
+    });
+  },
+
   setSensorPermission: (permission) => {
     set((state) => ({
       sensorState: {
@@ -212,6 +228,7 @@ export type PersistedState = {
   observer: Observer;
   timeState: TimeState;
   fovDeg: number;
+  labelDisplayMode: LabelDisplayMode;
 };
 
 export function saveViewerState(state: PersistedState): void {
@@ -232,7 +249,14 @@ export function loadViewerState(): PersistedState | null {
   }
 
   try {
-    const parsed = JSON.parse(raw) as PersistedState;
+    const parsed = JSON.parse(raw) as Partial<PersistedState>;
+    const labelDisplayMode: LabelDisplayMode =
+      parsed?.labelDisplayMode === 'en' ||
+      parsed?.labelDisplayMode === 'ko' ||
+      parsed?.labelDisplayMode === 'both'
+        ? parsed.labelDisplayMode
+        : 'ko';
+
     if (
       typeof parsed?.observer?.latDeg === 'number' &&
       typeof parsed?.observer?.lonDeg === 'number' &&
@@ -241,7 +265,12 @@ export function loadViewerState(): PersistedState | null {
       (parsed?.timeState?.mode === 'manual' || parsed?.timeState?.mode === 'realtime') &&
       typeof parsed?.fovDeg === 'number'
     ) {
-      return parsed;
+      return {
+        observer: parsed.observer,
+        timeState: parsed.timeState,
+        fovDeg: parsed.fovDeg,
+        labelDisplayMode
+      };
     }
     return null;
   } catch {

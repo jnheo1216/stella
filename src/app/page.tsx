@@ -34,6 +34,7 @@ export default function HomePage(): JSX.Element {
   const sensorState = useSkyStore((state) => state.sensorState);
   const isMobile = useSkyStore((state) => state.isMobile);
   const fovDeg = useSkyStore((state) => state.fovDeg);
+  const labelDisplayMode = useSkyStore((state) => state.labelDisplayMode);
 
   const setObserver = useSkyStore((state) => state.setObserver);
   const setIsMobile = useSkyStore((state) => state.setIsMobile);
@@ -43,6 +44,7 @@ export default function HomePage(): JSX.Element {
   const setSensorAvailability = useSkyStore((state) => state.setSensorAvailability);
   const setSensorQuaternion = useSkyStore((state) => state.setSensorQuaternion);
   const setCameraMode = useSkyStore((state) => state.setCameraMode);
+  const setLabelDisplayMode = useSkyStore((state) => state.setLabelDisplayMode);
   const tickRealtime = useSkyStore((state) => state.tickRealtime);
 
   const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -98,15 +100,17 @@ export default function HomePage(): JSX.Element {
     } else {
       setTimeMode('realtime');
     }
-  }, [setManualEpoch, setObserver, setTimeMode]);
+    setLabelDisplayMode(persisted.labelDisplayMode);
+  }, [setLabelDisplayMode, setManualEpoch, setObserver, setTimeMode]);
 
   useEffect(() => {
     saveViewerState({
       observer,
       timeState,
-      fovDeg
+      fovDeg,
+      labelDisplayMode
     });
-  }, [observer, timeState, fovDeg]);
+  }, [fovDeg, labelDisplayMode, observer, timeState]);
 
   useEffect(() => {
     if (!isMobile) {

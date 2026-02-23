@@ -1,6 +1,7 @@
 export type Observer = { latDeg: number; lonDeg: number; timezone: string };
 export type TimeState = { mode: 'realtime' | 'manual'; epochMs: number };
 export type CameraMode = 'sensor' | 'manual';
+export type LabelDisplayMode = 'en' | 'ko' | 'both';
 
 export type SensorPermission = 'unknown' | 'granted' | 'denied' | 'unsupported';
 export type SensorState = {
@@ -36,6 +37,7 @@ export type HorizontalPoint = {
 export type ConstellationLabel = {
   code: string;
   name: string;
+  nameKo?: string;
   raDeg: number;
   decDeg: number;
   rank: number;
@@ -50,6 +52,7 @@ export type ProjectedStar = HorizontalPoint & {
 export type ProjectedLabel = HorizontalPoint & {
   code: string;
   name: string;
+  nameKo?: string;
   rank: number;
 };
 
