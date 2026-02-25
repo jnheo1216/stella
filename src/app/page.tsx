@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getCurrentPosition,
@@ -205,8 +206,21 @@ export default function HomePage(): JSX.Element {
 
       <div className="hero-overlay">
         <header className="hero">
-          <p className="hero-kicker">Realtime Night Sky</p>
-          <h1>Stella</h1>
+          <div className="hero-brand">
+            <Image
+              src="/stella-logo.svg"
+              alt="Stella logo"
+              width={48}
+              height={48}
+              priority
+              className="hero-logo"
+            />
+            <div className="hero-title">
+              <p className="hero-kicker">Realtime Night Sky</p>
+              <h1>Stella</h1>
+            </div>
+          </div>
+          <p className="hero-summary">센서와 드래그로 현재 시각의 밤하늘 별자리를 탐색하세요.</p>
         </header>
       </div>
 

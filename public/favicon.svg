@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="faviconTitle">
+  <title id="faviconTitle">Stella Favicon</title>
+  <defs>
+    <radialGradient id="favBg" cx="50%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#173764" />
+      <stop offset="68%" stop-color="#0a1b35" />
+      <stop offset="100%" stop-color="#040914" />
+    </radialGradient>
+    <linearGradient id="favRing" x1="18%" y1="24%" x2="86%" y2="80%">
+      <stop offset="0%" stop-color="#9fe4ff" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#5cb8ff" stop-opacity="0.62" />
+    </linearGradient>
+    <linearGradient id="favStar" x1="50%" y1="16%" x2="50%" y2="88%">
+      <stop offset="0%" stop-color="#fbfdff" />
+      <stop offset="100%" stop-color="#8ad9ff" />
+    </linearGradient>
+  </defs>
+
+  <circle cx="32" cy="32" r="29" fill="url(#favBg)" />
+  <circle cx="32" cy="32" r="28.5" fill="none" stroke="#9aceff" stroke-opacity="0.34" />
+  <ellipse cx="32" cy="32" rx="24" ry="12" transform="rotate(-18 32 32)" fill="none" stroke="url(#favRing)" stroke-width="2.4" />
+  <path
+    d="M32 16L35.4 28.6L48 32L35.4 35.4L32 48L28.6 35.4L16 32L28.6 28.6Z"
+    fill="url(#favStar)"
+    stroke="#f8fdff"
+    stroke-opacity="0.9"
+    stroke-width="1"
+  />
+</svg>
